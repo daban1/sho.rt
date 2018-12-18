@@ -44,12 +44,71 @@ include('redirect.php');
 if(isset($_GET['display'])) {
 ?>
     <div class="alert alert-success fade show">
-                <center><?php echo $baseURL."/?redirect=".$_GET['display']?></center>
+                <center><?php echo $baseURL."/".$_GET['display']?></center>
     </div>
 <?php
 } /* end isset display */
 ?>
            
+
+<?php 
+    if(isset($rez_views)) {
+?>
+
+<div class="alert alert-primary fade show">
+            <center><?php echo '<b>Views:</b> '.$rez_views; ?></center>
+    </div>
+<?php } 
+
+/* afisare tabel cu ultimele 5 site-uri vizualizate */
+
+$get_views = "SELECT id, long_url, short_url FROM tabel_short_url order by id DESC limit 5";
+$rez_get_views = $conn->query($get_views);
+
+echo '<table class="table table-striped">';
+echo '<thead class="thead-dark"><tr><th scope="col">Latest 5 URL`s</th><th></th></tr><thead>';
+
+while($row = $rez_get_views->fetch_assoc() ) {
+        $long_url = $row['long_url'];
+        $short_url = $row['short_url'];
+
+echo '<tr>';
+echo "<td><b>long_url:</b>$long_url<br></td>";
+echo "<td><b>short_url:</b>$short_url</td>";
+echo "<tr>";
+}
+echo '</table>';
+
+/* afisare top 5 site-uri most visited */
+
+$get_most_visited = "SELECT * FROM tabel_short_url order by views DESC limit 5";
+$rez_get_most_visited = $conn->query($get_most_visited);
+
+echo '<table class="table table-striped">';
+
+echo '<thead class="thead-dark"><tr>';
+echo '<th scope="col">Top 5 most visited URL`s</th>';
+echo '<th></th>';
+echo '<th></th>';
+echo '</tr><thead>';
+
+while($row = $rez_get_most_visited->fetch_assoc() ) {
+        $long_url = $row['long_url'];
+        $short_url = $row['short_url'];
+        $views = $row['views'];
+
+echo '<tr>';
+echo "<td><b>long_url:</b>$long_url<br></td>";
+echo "<td><b>short_url:</b>$short_url</td>";
+echo "<td><b>Views:</b>$views</td>";
+echo "<tr>";
+}
+echo '</table>';
+
+?>    
+
+
+
             </div>
         </div>
     </div>

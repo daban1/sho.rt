@@ -7,6 +7,14 @@ if(isset($_POST['url'])){
     header("Location: index.php");
 }
 
+
+if (strpos($long_url, 'http://') !== 0) {
+    if(strpos($long_url, 'https://') !== 0 ) {
+        $long_url = 'http://'.$long_url;
+    }    
+}
+
+
 $characters ="0123456789abcdefghijklmnopqrstuvxyzABCDEFGHIJKLMNOPQRSTUVXYZ";
 
 $short_url="";
