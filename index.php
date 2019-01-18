@@ -27,10 +27,30 @@ include('redirect.php');
       </div>
       <div class="col-4 text-center">
         <?php // cand ne-am logat user name-ul ?>
+        <?php if(isset($_SESSION['login'])){
+
+            $uid = $_SESSION['login'];
+            $select_user_details = "SELECT * FROM users WHERE id=$uid";
+            $result = $conn->query($select_user_details);
+            $userData = $result->fetch_assoc();
+
+            echo $userData['email'];
+        }
+        ?>
       </div>
       <div class="col-4 d-flex justify-content-end align-items-center">    
-        <a class="btn btn-sm btn-outline-secondary" href="login.php">Log in</a>
-        <a class="btn btn-sm btn-outline-secondary" href="signup.php">Sign up</a>
+
+      <?php if(isset($_SESSION['login'])){ ?>
+
+        <a class="btn btn-sm btn-outline-secondary" href="logout.php">Logout</a>
+
+      <?php } else { ?>
+
+          <a class="btn btn-sm btn-outline-secondary" href="login.php">Log in</a>
+          <a class="btn btn-sm btn-outline-secondary" href="signup.php">Sign up</a>
+
+      <?php } ?>
+              
       </div>
     </div>
   </header>
@@ -98,6 +118,7 @@ echo '</table>';
 
 /* afisare top 5 site-uri most visited */
 
+
 $get_most_visited = "SELECT * FROM tabel_short_url order by views DESC limit 5";
 $rez_get_most_visited = $conn->query($get_most_visited);
 
@@ -121,9 +142,33 @@ echo "<td><b>Views:</b>$views</td>";
 echo "<tr>";
 }
 echo '</table>';
+ 
 
-?>    
+/* afisare top 5 short url pe utilizator */
 
+if(isset($_SESSION['login'])) { 
+
+$get_latest_user_url = "SELECT * FROM tabel_short_url where uid='$uid' order by DESC limit 5";
+$rez_get_latest_user_url = $conn->query($get_latest_user_url);
+
+echo '<table class="table table-striped">';
+
+echo '<thead class="thead-dark"><tr>';
+echo '<th scope="col">User`s top 5 most shorten URL`s</th>';
+echo '<th></th>';
+echo '<th></th>';
+echo '</tr><thead>';
+
+while($row = $rez_get_latest_user_url->fetch_assoc() ) {
+    $uid = $row['uid'];
+    $short_url = $row['short_url'];
+
+    echo '<tr>';
+    echo '<td><b>short_url:</b>$short_url</td>';
+    
+}
+}
+?>
 
 
             </div>

@@ -18,7 +18,20 @@
         $result = $conn->query($verify);
 
         if($result->num_rows == 1) {
-            echo '<h1>LOGGED IN!!! </h1>';
+
+          $result_array = $result->fetch_assoc();
+
+          $_SESSION['login'] = $result_array['id'];
+
+          header("Location: index.php");  
+        } else {
+
+          //In cazul in care se incearca pe aceeasi sesiune de mai mult de 5 ori se deconecteaza
+          $_SESSION['badlogins'] = $_SESSION['badlogins'] + 1;
+
+          if($_SESSION['badlogins'] >= 5) {
+            die();
+          }
         }
     }
     ?>
